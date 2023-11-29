@@ -28,14 +28,14 @@ namespace BasicBankAPITests.Features
         
         private string[] _featureTags = ((string[])(null));
         
-#line 1 "basiAPIOperations.feature"
+#line 1 "basicAPIOperations.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "basiAPIOperations", "A short summary of the feature", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "basiAPIOperations", "As a User I want to do some basic banking operation using API", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -169,7 +169,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 18
-testRunner.Given("an Account with \'accountID\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given(string.Format("an Account with accountid \'{0}\'", accountID), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 19
 testRunner.When("Delete endpoint triggered to delete an account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -185,8 +185,8 @@ testRunner.Then(string.Format("Verify the response code is \'statusCode\' and me
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("A user can deposit to an account")]
         [NUnit.Framework.CategoryAttribute("deposit")]
-        [NUnit.Framework.TestCaseAttribute("10000", "200", "1000", null)]
-        public virtual void AUserCanDepositToAnAccount(string accountID, string statusCode, string amount, string[] exampleTags)
+        [NUnit.Framework.TestCaseAttribute("10000", "200", "1000", "deposit Successfully", null)]
+        public virtual void AUserCanDepositToAnAccount(string accountID, string statusCode, string amount, string messgae, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "deposit"};
@@ -199,6 +199,7 @@ testRunner.Then(string.Format("Verify the response code is \'statusCode\' and me
             argumentsOfScenario.Add("accountID", accountID);
             argumentsOfScenario.Add("statusCode", statusCode);
             argumentsOfScenario.Add("amount", amount);
+            argumentsOfScenario.Add("messgae", messgae);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user can deposit to an account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 26
 this.ScenarioInitialize(scenarioInfo);
@@ -227,8 +228,7 @@ testRunner.Given("Account with \'accountID\' and \'amount\'", ((string)(null)), 
 testRunner.When("Put endpoint triggered to deposit an account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 29
-testRunner.Then(string.Format("Verify the response code is \'statusCode\' and message “{0} deposited to Account <a" +
-                            "ccounId> successfully\"", amount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.Then("Verify the response code is \'statusCode\' and message \'depositMessage\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -273,7 +273,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 36
-testRunner.Given("Account with \'accountID\' and \'amount\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given(string.Format("Account with \'{0}\' and \'{1}\'", accountID, amount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 37
 testRunner.When("Put endpoint triggered to withdraw an account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -281,6 +281,159 @@ testRunner.When("Put endpoint triggered to withdraw an account with above detail
 #line 38
 testRunner.Then(string.Format("Verify the response code is \'statusCode\' and message “{0} withdrawn from Account " +
                             "<accounId> successfully\"", amount), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Verify 400 bad request while creating Account")]
+        [NUnit.Framework.CategoryAttribute("Negative")]
+        [NUnit.Framework.TestCaseAttribute("10000", "^^^%^%^^ `", "Ahmedabad, Gujarat", "400", null)]
+        public virtual void Verify400BadRequestWhileCreatingAccount(string initialBalance, string accountName, string address, string statusCode, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "Negative"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("initialBalance", initialBalance);
+            argumentsOfScenario.Add("accountName", accountName);
+            argumentsOfScenario.Add("address", address);
+            argumentsOfScenario.Add("statusCode", statusCode);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Verify 400 bad request while creating Account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 44
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 45
+testRunner.Given("Account with \'initialBalance\' , \'accountName\',\'address\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 46
+testRunner.When("POST endpoint triggered to create new account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 47
+testRunner.Then("Verify the response code is \'statusCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("A user tryinh to  delete account deleted Account")]
+        [NUnit.Framework.CategoryAttribute("Negative")]
+        [NUnit.Framework.TestCaseAttribute("10000", "400", null)]
+        public virtual void AUserTryinhToDeleteAccountDeletedAccount(string accountID, string statusCode, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "Negative"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("accountID", accountID);
+            argumentsOfScenario.Add("statusCode", statusCode);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user tryinh to  delete account deleted Account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 53
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 54
+testRunner.Given("an Account with \'accountID\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 55
+testRunner.When("Delete endpoint triggered to delete an account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 56
+testRunner.Then("Verify the response code is \'statusCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("A user can withdraw from an account with invalid amount")]
+        [NUnit.Framework.CategoryAttribute("withdraw")]
+        [NUnit.Framework.TestCaseAttribute("10000", "400", "1000", null)]
+        public virtual void AUserCanWithdrawFromAnAccountWithInvalidAmount(string accountID, string statusCode, string amount, string[] exampleTags)
+        {
+            string[] @__tags = new string[] {
+                    "withdraw"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("accountID", accountID);
+            argumentsOfScenario.Add("statusCode", statusCode);
+            argumentsOfScenario.Add("amount", amount);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user can withdraw from an account with invalid amount", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 62
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 63
+testRunner.Given("Account with \'accountID\' and \'amount\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 64
+testRunner.When("Put endpoint triggered to withdraw an account with above details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 65
+testRunner.Then("Verify the response code is \'statusCode\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

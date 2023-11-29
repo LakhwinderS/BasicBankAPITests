@@ -29,6 +29,10 @@ namespace BasicBankAPITests.Models
         public decimal amount { get; set;}
         public string accountNumber { get; set; }
 
+        public static explicit operator depositAccountRequest(string? v)
+        {
+            throw new NotImplementedException();
+        }
     }
     public class depositAccountResponse
     { 

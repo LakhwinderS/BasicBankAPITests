@@ -1,10 +1,12 @@
 using BasicBankAPITests.Models;
 using BasicBankAPITests.Utils;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using RestSharp;
 using System;
+using System.Net;
 using TechTalk.SpecFlow;
 
 namespace BasicBankAPITests.StepDefinitions
@@ -13,6 +15,7 @@ namespace BasicBankAPITests.StepDefinitions
     public class BasicAPIOperationsStepDefinitions
     {
         Object createPayload = null;
+        Object depositPayload = null;
         ScenarioContext _scenarioContext;
         public BasicAPIOperationsStepDefinitions(ScenarioContext context)
         {
@@ -66,55 +69,132 @@ namespace BasicBankAPITests.StepDefinitions
         [Then(@"Verify the account details are correctly returned in the JSON response")]
         public void ThenVerifyTheAccountDetailsAreCorrectlyReturnedInTheJSONResponse()
         {
-            apiOperations.ValidateJSON(_scenarioContext["jsonResponse"].ToString());
+            try
+            {
+                if (_scenarioContext != null)
+                {
+                    commonMethods.ValidateJSON(_scenarioContext["jsonResponse"].ToString());
+                }
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail(ex.ToString());
+            }
+        
         }
 
         [Given(@"an Account with '([^']*)'")]
         public void GivenAnAccountWith(string accountID)
         {
-            throw new PendingStepException();
+           
+
+            _scenarioContext["accountID"]= accountID;
+
         }
 
+
         [When(@"Delete endpoint triggered to delete an account with above details")]
-        public void WhenDeleteEndpointTriggeredToDeleteAnAccountWithAboveDetails()
+        public async void WhenDeleteEndpointTriggeredToDeleteAnAccountWithAboveDetails()
         {
-            throw new PendingStepException();
+
+            apiOperations api = new apiOperations(constansts.BaseURI);
+            string rourcePath = "delete" + _scenarioContext["accountID"].ToString();
+            {
+                RestResponse response = await api.DeleteData(rourcePath);
+                if (response != null)
+                {
+                    _scenarioContext["responseStatusCode"] = (int)response.StatusCode;
+                    dynamic jsonResponse = JsonConvert.DeserializeObject(response.Content);
+                    _scenarioContext["jsonResponse"] = jsonResponse;
+                }
+            }
+
         }
 
         [Then(@"Verify the response code is '([^']*)' and message “Account '([^']*)' deleted successfully”")]
-        public void ThenVerifyTheResponseCodeIsAndMessageAccountDeletedSuccessfully(string statusCode, string p1)
+        public void ThenVerifyTheResponseCodeIsAndMessageAccountDeletedSuccessfully(string statusCode, string message)
         {
-            throw new PendingStepException();
+            Assert.AreEqual(statusCode, _scenarioContext["responseStatusCode"]);
+
+            dynamic jsonObject = JObject.Parse(_scenarioContext["jsonResponse"].ToString());
+
+            Assert.AreEqual(message, jsonObject.Message);
+
         }
 
         [Given(@"Account with '([^']*)' and '([^']*)'")]
-        public void GivenAccountWithAnd(string accountID, string amount)
+        public void GivenAccountWithAnd(string accountID, decimal amount)
         {
-            throw new PendingStepException();
+            depositPayload = new depositAccountRequest
+            {
+               
+                amount = amount,
+                accountNumber= accountID
+
+
+            };
+
+            _scenarioContext["depositPayload"]= depositPayload;
         }
 
         [When(@"Put endpoint triggered to deposit an account with above details")]
-        public void WhenPutEndpointTriggeredToDepositAnAccountWithAboveDetails()
+        public async Task WhenPutEndpointTriggeredToDepositAnAccountWithAboveDetailsAsync()
         {
-            throw new PendingStepException();
+            apiOperations api = new apiOperations(constansts.BaseURI);
+            if (_scenarioContext != null)
+            {
+                RestResponse response = await api.PutData(constansts.deposit, _scenarioContext.Get<depositAccountRequest>("depositPayload"));
+                if (response != null)
+                {
+                    _scenarioContext["responseStatusCode"] = (int)response.StatusCode;
+                    dynamic jsonResponse = JsonConvert.DeserializeObject(response.Content);
+                    _scenarioContext["jsonResponse"] = jsonResponse;
+                }
+            }
         }
 
         [Then(@"Verify the response code is '([^']*)' and message “(.*) deposited to Account <accounId> successfully""")]
-        public void ThenVerifyTheResponseCodeIsAndMessageDepositedToAccountAccounIdSuccessfully(string statusCode, int p1)
+        public void ThenVerifyTheResponseCodeIsAndMessageDepositedToAccountAccounIdSuccessfully(int statusCode, string msg)
         {
-            throw new PendingStepException();
+            Assert.AreEqual(statusCode, _scenarioContext["responseStatusCode"]);
+
+            dynamic jsonObject = JObject.Parse(_scenarioContext["jsonResponse"].ToString());
+
+            Assert.Contains(msg, jsonObject.Message);
+
         }
 
         [When(@"Put endpoint triggered to withdraw an account with above details")]
-        public void WhenPutEndpointTriggeredToWithdrawAnAccountWithAboveDetails()
+        public async void WhenPutEndpointTriggeredToWithdrawAnAccountWithAboveDetails()
         {
-            throw new PendingStepException();
+            apiOperations api = new apiOperations(constansts.BaseURI);
+            if (_scenarioContext != null)
+            {
+                RestResponse response = await api.PutData(constansts.withdraw, _scenarioContext.Get<depositAccountRequest>("depositPayload"));
+                if (response != null)
+                {
+                    _scenarioContext["responseStatusCode"] = (int)response.StatusCode;
+                    dynamic jsonResponse = JsonConvert.DeserializeObject(response.Content);
+                    _scenarioContext["jsonResponse"] = jsonResponse;
+                }
+            }
         }
 
         [Then(@"Verify the response code is '([^']*)' and message “(.*) withdrawn from Account <accounId> successfully""")]
-        public void ThenVerifyTheResponseCodeIsAndMessageWithdrawnFromAccountAccounIdSuccessfully(string statusCode, int p1)
+        public void ThenVerifyTheResponseCodeIsAndMessageWithdrawnFromAccountAccounIdSuccessfully(int statusCode, string msg)
         {
-            throw new PendingStepException();
+            Assert.AreEqual(statusCode, (int)_scenarioContext["responseStatusCode"]);
+
+            dynamic jsonObject = JObject.Parse(_scenarioContext["jsonResponse"].ToString());
+
+            Assert.Contains(msg, jsonObject.Message);
         }
+        [Then(@"Verify the response code is '([^']*)'")]
+        public void ThenVerifyTheResponseCodeIs(int statusCode)
+        {
+            Assert.AreEqual(statusCode, (int)_scenarioContext["responseStatusCode"]);
+        }
+
+
     }
 }

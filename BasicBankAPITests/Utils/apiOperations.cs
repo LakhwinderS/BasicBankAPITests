@@ -1,10 +1,8 @@
 ﻿using BasicBankAPITests.Models;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +24,6 @@ namespace BasicBankAPITests.Utils
             var request = new RestRequest(resourcePath, Method.Delete);
             request.AddHeader("Content-Type", "application/json");
             var response = await restClient.ExecuteAsync(request);
-            restClient.Dispose();
             return response;
         }
 
@@ -38,7 +35,7 @@ namespace BasicBankAPITests.Utils
             var response = await restClient.ExecuteAsync(request);
             return response;
         }
-        public async Task<RestResponse> PutData(string resourcePath, string requestBody)
+        public async Task<RestResponse> PutData(string resourcePath, object requestBody)
         {
             var request = new RestRequest(resourcePath, Method.Put);
             request.AddHeader("Content-Type", "application/json");
@@ -46,18 +43,6 @@ namespace BasicBankAPITests.Utils
             var response = await restClient.ExecuteAsync(request);
             return response;
         }
-        public static bool ValidateJSON(this string s)
-        {
-            try
-            {
-                JToken.Parse(s);
-                return true;
-            }
-            catch (JsonReaderException ex)
-            {
-                Trace.WriteLine(ex);
-                return false;
-            }
-        }
+
     }
 }
